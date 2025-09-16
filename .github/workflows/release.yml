@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write   # 👈 đặt ở root, không đặt trong jobs
+
 jobs:
   build:
     runs-on: windows-latest

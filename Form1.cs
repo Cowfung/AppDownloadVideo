@@ -22,7 +22,7 @@ namespace WinFormsApp1
             }
             catch
             {
-                // Nếu file đang bị lock thì thôi, không crash app
+               
             }
         }
 
@@ -111,19 +111,19 @@ namespace WinFormsApp1
                 switch (quality)
                 {
                     case "Best":
-                        args = $"-f \"bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]\" --merge-output-format mp4 --ffmpeg-location \"{ffmpegFolder}\" -o \"{outputDir}\\%(title)s.%(ext)s\" {url}";
+                        args = $"-f \"bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]\" --merge-output-format mp4 --ffmpeg-location \"{ffmpegFolder}\" -o \"{outputDir}\\%(title).50s.%(ext)s\" {url}";
                         break;
                     case "1080p":
-                        args = $"-f \"bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080][ext=mp4]\" --merge-output-format mp4 --ffmpeg-location \"{ffmpegFolder}\" -o \"{outputDir}\\%(title)s.%(ext)s\" {url}";
+                        args = $"-f \"bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080][ext=mp4]\" --merge-output-format mp4 --ffmpeg-location \"{ffmpegFolder}\" -o \"{outputDir}\\%(title).50s.%(ext)s\" {url}";
                         break;
                     case "720p":
-                        args = $"-f \"bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]\" --merge-output-format mp4 --ffmpeg-location \"{ffmpegFolder}\" -o \"{outputDir}\\%(title)s.%(ext)s\" {url}";
+                        args = $"-f \"bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]\" --merge-output-format mp4 --ffmpeg-location \"{ffmpegFolder}\" -o \"{outputDir}\\%(title).50s.%(ext)s\" {url}";
                         break;
                     case "480p":
-                        args = $"-f \"bestvideo[height<=480][ext=mp4]+bestaudio[ext=m4a]/best[height<=480][ext=mp4]\" --merge-output-format mp4 --ffmpeg-location \"{ffmpegFolder}\" -o \"{outputDir}\\%(title)s.%(ext)s\" {url}";
+                        args = $"-f \"bestvideo[height<=480][ext=mp4]+bestaudio[ext=m4a]/best[height<=480][ext=mp4]\" --merge-output-format mp4 --ffmpeg-location \"{ffmpegFolder}\" -o \"{outputDir}\\%(title).50s.%(ext)s\" {url}";
                         break;
                     case "360p":
-                        args = $"-f \"bestvideo[height<=360][ext=mp4]+bestaudio[ext=m4a]/best[height<=360][ext=mp4]\" --merge-output-format mp4 --ffmpeg-location \"{ffmpegFolder}\" -o \"{outputDir}\\%(title)s.%(ext)s\" {url}";
+                        args = $"-f \"bestvideo[height<=360][ext=mp4]+bestaudio[ext=m4a]/best[height<=360][ext=mp4]\" --merge-output-format mp4 --ffmpeg-location \"{ffmpegFolder}\" -o \"{outputDir}\\%(title).50s.%(ext)s\" {url}";
                         break;
                 }
             }
@@ -133,10 +133,10 @@ namespace WinFormsApp1
                 {
                     case "Audio Best":
                     case "Audio MP3 320kbps":
-                        args = $"-x --audio-format mp3 --audio-quality 0 -o \"{outputDir}\\%(title)s.%(ext)s\" {url}";
+                        args = $"-x --audio-format mp3 --audio-quality 0 -o \"{outputDir}\\%(title).50s.%(ext)s\" {url}";
                         break;
                     case "Audio MP3 128kbps":
-                        args = $"-x --audio-format mp3 --audio-quality 5 -o \"{outputDir}\\%(title)s.%(ext)s\" {url}";
+                        args = $"-x --audio-format mp3 --audio-quality 5 -o \"{outputDir}\\%(title).50s.%(ext)s\" {url}";
                         break;
                 }
             }

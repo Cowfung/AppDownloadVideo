@@ -25,7 +25,6 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\ffmpeg.exe" />
-    <EmbeddedResource Include="Resources\yt-dlp.exe" />
   </ItemGroup>
 	<ItemGroup>
 		<Compile Include="Form1.cs" />

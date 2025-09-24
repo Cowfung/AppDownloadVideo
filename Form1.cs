@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.IO;
+using System.Net;
 using WinFormsApp1.Properties;
 
 namespace WinFormsApp1
@@ -40,6 +41,45 @@ namespace WinFormsApp1
 
             button2.Click += buttonDownload_Click;
         }
+        private string GetOrUpdateYtDlp()
+        {
+            string tempDir = Path.Combine(Path.GetTempPath(), "MyWinFormsApp");
+            Directory.CreateDirectory(tempDir);
+            string exePath = Path.Combine(tempDir, "yt-dlp.exe");
+
+            bool needUpdate = false;
+
+            if (!File.Exists(exePath))
+            {
+                needUpdate = true;
+            }
+            else
+            {
+                // Ví dụ: nếu bản yt-dlp cũ hơn 7 ngày thì update
+                DateTime lastWrite = File.GetLastWriteTime(exePath);
+                if ((DateTime.Now - lastWrite).TotalDays > 7)
+                {
+                    needUpdate = true;
+                }
+            }
+
+            if (needUpdate)
+            {
+                try
+                {
+                    using (var wc = new WebClient())
+                    {
+                        wc.DownloadFile("https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe", exePath);
+                    }
+                }
+                catch
+                {
+                    MessageBox.Show("Không thể tải yt-dlp, sẽ dùng bản cũ nếu có.", "Cảnh báo");
+                }
+            }
+
+            return exePath;
+        }
         private string ExtractFfmpeg()
         {
             string tempDir = Path.Combine(Path.GetTempPath(), "MyWinFormsApp");
@@ -57,21 +97,6 @@ namespace WinFormsApp1
 
         }
 
-
-        private string ExtractYtDlp()
-        {
-            string tempDir = Path.Combine(Path.GetTempPath(), "MyWinFormsApp");
-            Directory.CreateDirectory(tempDir);
-
-            string exePath = Path.Combine(tempDir, "yt-dlp.exe");
-
-            if (!File.Exists(exePath))
-            {
-                File.WriteAllBytes(exePath, Resources.yt_dlp);
-            }
-
-            return exePath;
-        }
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -151,7 +176,7 @@ namespace WinFormsApp1
 
             ProcessStartInfo psi = new ProcessStartInfo
             {
-                FileName = ExtractYtDlp(),
+                FileName = GetOrUpdateYtDlp(),
                 Arguments = arguments,
                 UseShellExecute = false,
                 RedirectStandardOutput = true,

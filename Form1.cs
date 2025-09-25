@@ -41,36 +41,54 @@ namespace WinFormsApp1
 
             button2.Click += buttonDownload_Click;
         }
+
         private string GetOrUpdateYtDlp()
         {
             string tempDir = Path.Combine(Path.GetTempPath(), "MyWinFormsApp");
             Directory.CreateDirectory(tempDir);
             string exePath = Path.Combine(tempDir, "yt-dlp.exe");
+            string versionFile = Path.Combine(tempDir, "yt-dlp.version");
 
-            bool needUpdate = false;
+            string latestVersion = null;
 
-            if (!File.Exists(exePath))
+            // Lấy version mới nhất từ GitHub API
+            try
             {
-                needUpdate = true;
-            }
-            else
-            {
-                // Ví dụ: nếu bản yt-dlp cũ hơn 7 ngày thì update
-                DateTime lastWrite = File.GetLastWriteTime(exePath);
-                if ((DateTime.Now - lastWrite).TotalDays > 7)
+                using (var wc = new WebClient())
                 {
-                    needUpdate = true;
+                    wc.Headers.Add("User-Agent", "request"); // GitHub API cần UA
+                    string json = wc.DownloadString("https://api.github.com/repos/yt-dlp/yt-dlp-nightly-builds/releases/latest");
+                    var match = System.Text.RegularExpressions.Regex.Match(json, "\"tag_name\":\\s*\"([^\"]+)\"");
+                    if (match.Success)
+                    {
+                        latestVersion = match.Groups[1].Value; // vd: "2025.09.23.232818"
+                    }
                 }
             }
+            catch
+            {
+                // Nếu không fetch được, cứ dùng bản cũ
+                return exePath;
+            }
 
-            if (needUpdate)
+            // Đọc version hiện tại
+            string currentVersion = null;
+            if (File.Exists(versionFile))
+            {
+                currentVersion = File.ReadAllText(versionFile).Trim();
+            }
+
+            bool needUpdate = !File.Exists(exePath) || currentVersion != latestVersion;
+
+            if (needUpdate && latestVersion != null)
             {
                 try
                 {
                     using (var wc = new WebClient())
                     {
-                        wc.DownloadFile("https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe", exePath);
+                        wc.DownloadFile("https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/latest/download/yt-dlp.exe", exePath);
                     }
+                    File.WriteAllText(versionFile, latestVersion); // lưu version mới
                 }
                 catch
                 {
@@ -80,6 +98,7 @@ namespace WinFormsApp1
 
             return exePath;
         }
+
         private string ExtractFfmpeg()
         {
             string tempDir = Path.Combine(Path.GetTempPath(), "MyWinFormsApp");
